@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Keyboard scan rate tool</title>
+    <style type="text/css" media="screen">
+table{
+  border-collapse:collapse;
+  border:1px solid #000000;
+  padding: 5px;
+}
+
+table td{
+  border:1px solid #000000;
+  padding: 5px;
+}
+
+table th{
+  border:1px solid #000000;
+  padding: 5px;
+}
+    </style>
+  </head>
+  <body>
+    <h2>How to use this page</h2>
+    <p>
+      To use this tool, try to press and release a key as quickly as possible.
+      I find flicking the edge of a keycap works well to create very short
+      key presses.
+    </p>
+
+    <table>
+      <tr>
+        <th>Shortest Key Press</th>
+        <th>Estimated Scan Rate</th>
+      </tr>
+      <tr>
+        <td id="best-time">press any key</td>
+        <td id="scan-rate">press any key</td>
+      </tr>
+    </table>
+
+    <h2>Theory</h2>
+    <p>
+    The <em>scan rate</em> of a keyboard measures how frequently the keyboard updates (internally)
+    the state of its key matrix.
+    Normally, the scan rate is limited by the
+    <a href="https://en.wikipedia.org/wiki/Switch#Contact_bounce" target="_blank">bounce time</a>
+    of the key switches used and the debounce algorithm used. For example, the debounce
+    time of Cherry MX mechanical switches is rated at ≤5ms. So assuming a simple
+    algorithm is used that waits 5ms for a switch signal to stabilize, then the scan rate
+    would be limited to 200Hz.
+    </p>
+
+    <p>
+    The idea used here is that the scan rate of the keyboard effectively
+    determines the shortest delay between a key press and a key release.
+    Using this information we estimate the scan rate as:
+    <code>ScanRate = 1 / ShortestKeyHold</code>.
+    </p>
+
+    <p>
+    Note that scan rate is <strong>not</strong> the same as poll rate. On a USB device,
+    <em>poll rate</em> refers to how often the OS will check the USB device for updates.
+    The poll rate together with the scan rate determines the maximum input latency.
+    For example, take the example above were the scan interval is 5ms. If our poll
+    rate is 1000Hz, then the keyboard is polled every 1ms and so the maximal
+    input latency is 1+5=6ms. However, if the scan rate were 100Hz, then the maximal
+    input latency would be 10+5=15ms.
+    Note: It is possible to look up the poll rate of a USB device using software.
+    </p>
+
+    <p>
+    Take these calculations with a grain of salt.
+    </p>
+
+    <h2>Key press history</h2>
+
+    <ul id="event-history">
+    </ul>
+
+    <script src="key-scan.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>
